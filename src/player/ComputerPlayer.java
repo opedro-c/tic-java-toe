@@ -1,6 +1,6 @@
 package player;
 
-public class ComputerPlayer implements Player {
+public class ComputerPlayer extends Player {
 
     @Override
     public void chooseBoardCoordinate() {

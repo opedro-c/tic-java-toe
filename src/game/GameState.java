@@ -1,5 +1,12 @@
 package game;
 
 public enum GameState {
-    // TODO: Map Game States
+    STARTING,
+    CHOOSING_MAIN_MENU_OPTION,
+    QUITTING,
+    PLAYING_AGAINST_PC,
+    CHOOSING_TO_PLAY_FIRST,
+    PLAYER_1_PLAYING,
+    PLAYER_2_PLAYING,
+    FINISHING_GAME
 }
