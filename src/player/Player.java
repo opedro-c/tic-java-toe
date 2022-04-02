@@ -4,17 +4,12 @@ import board.Position;
 import java.util.ArrayList;
 
 public abstract class Player {
-    private boolean playsFirst;
     private boolean wonTheGame;
     private Position currentPlay;
     private PlayerType playerType;
     private ArrayList<Position> plays;
 
     public abstract void chooseBoardCoordinate();
-
-    public boolean isFirstPlayer() {
-        return this.playsFirst;
-    }
 
     public boolean isGameWinner() {
         return this.wonTheGame;
@@ -30,10 +25,6 @@ public abstract class Player {
 
     public PlayerType getPlayerType() {
         return playerType;
-    }
-
-    public void setPlaysFirst(boolean playsFirst) {
-        this.playsFirst = playsFirst;
     }
 
     public void setWonTheGame(boolean wonTheGame) {
