@@ -12,20 +12,22 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class GameManager {
-    Player humanPlayer = new HumanPlayer();
-    Player anotherHumanPlayer = new HumanPlayer();
-    Player computerPlayer = new ComputerPlayer();
     BoardManager boardManager = new BoardManager();
-    GameState gameState;
-    MatchOption matchOption;
+    boolean pcVsPc;
     boolean gameDrew;
     boolean gameOver;
-    boolean playingAgainstComputer;
     boolean humanPlaysFirst;
+    boolean needsHelp;
+    boolean playingAgainstComputer;
     boolean someoneWon;
     boolean userEntryOk;
     boolean wantsToQuitGame;
-    boolean needsHelp;
+    GameState gameState;
+    MatchOption matchOption;
+    Player anotherComputerPlayer = new ComputerPlayer();
+    Player anotherHumanPlayer = new HumanPlayer();
+    Player computerPlayer = new ComputerPlayer();
+    Player humanPlayer = new HumanPlayer();
     PlayerType gameWinner;
     String mainMenuOption;
     String message = "";
@@ -37,19 +39,15 @@ public class GameManager {
     public void processEvents() {
         if (this.needsUserInput()) {
             this.userEntryOk = false;
-            Scanner input = new Scanner(System.in);
+            Scanner input = new Scanner(System.in); // TODO: Find the best way to do a user input
             try {
                 String userInput = input.next();
                 if (this.gameState == GameState.CHOOSING_MAIN_MENU_OPTION)
-                    this.chooseMainMenuOption(userInput);
+                    this.chooseMainMenuOption(userInput); // FIXME: Remove passing user input as parameter
                 if (this.gameState == GameState.HELPING)
                     this.needsHelp = false;
-            } catch (InvalidMainMenuOption e) {
-                this.message = e.getMessage();
-            } catch (EmptyEntryException e) {
-                this.message = e.getMessage();
             } catch (RuntimeException e) {
-                e.printStackTrace();
+                this.message = e.getMessage();
             }
         } else if (this.gameState == GameState.QUITTING) {
             this.gameOver = true;
@@ -68,6 +66,8 @@ public class GameManager {
                     this.gameState = GameState.QUITTING;
                 } else if (needsHelp) {
                     this.gameState = GameState.HELPING;
+                } else if (pcVsPc) {
+                  this.gameState = GameState.PC_VS_PC;
                 } else {
                     this.gameState = GameState.PLAYER_1_PLAYING;
                 }
@@ -126,7 +126,7 @@ public class GameManager {
     }
 
     private void chooseMainMenuOption(String userInput) {
-        String[] mainMenuOptions = {"1", "2", "3", "4"};
+        String[] mainMenuOptions = {"1", "2", "3", "4", "5"};
         if (userInput.isEmpty())
             throw new EmptyEntryException();
         if (Arrays.stream(mainMenuOptions).noneMatch((opt) -> opt.equals(userInput)))
@@ -142,8 +142,9 @@ public class GameManager {
                 this.matchOption = MatchOption.HUMAN_VS_PC;
                 this.playingAgainstComputer = true;
             }
-            case "3" -> this.needsHelp = true;
-            case "4" -> this.wantsToQuitGame = true;
+            case "3" -> this.pcVsPc = true;
+            case "4" -> this.needsHelp = true;
+            case "5" -> this.wantsToQuitGame = true;
         }
     }
 
@@ -156,8 +157,9 @@ public class GameManager {
     private static void displayMainMenuOptions() {
         System.out.println("1. Human Vs Human");
         System.out.println("2. Human Vs PC");
-        System.out.println("3. Help");
-        System.out.println("4. Quit Game");
+        System.out.println("3. PC Vs PC");
+        System.out.println("4. Help");
+        System.out.println("5. Quit Game");
         System.out.println("Enter an option > ");
     }
 
